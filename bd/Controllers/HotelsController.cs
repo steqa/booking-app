@@ -1,98 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using bd.Data;
-using bd.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using bd.Schemas.Hotel;
+using bd.Services.Hotel;
 
 namespace bd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/hotels")]
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly IHotelService _hotelService;
 
-        public HotelsController(MyDbContext context)
+        public HotelsController(IHotelService hotelService)
         {
-            _context = context;
+            _hotelService = hotelService;
+        }
+        
+        // POST: api/Hotels
+        [HttpPost]
+        public async Task<ActionResult<SHotelResponse>> PostHotel(SHotelCreate data)
+        {
+            var hotel = await _hotelService.CreateHotel(data);
+            return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, hotel);
         }
 
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelSchemas.SHotelExtended>>> GetHotels()
+        public async Task<ActionResult<SHotelResponse[]>> GetHotels()
         {
-            var hotels = await _context.Hotels.ToHotelExtended().ToListAsync();
-
+            var hotels = await _hotelService.GetHotels();
             return Ok(hotels);
         }
-
-        // GET: api/Hotels/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<HotelSchemas.SHotelExtended>> GetHotel(long id)
+        
+        // GET: api/Hotels/Rooms
+        [HttpGet("rooms")]
+        public async Task<ActionResult<SHotelRoomsResponse[]>> GetHotelsRooms()
         {
-            var hotel = await _context.Hotels.Where(h => h.Id == id).ToHotelExtended().FirstOrDefaultAsync();
-
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-
+            var hotels = await _hotelService.GetHotelsRooms();
+            return Ok(hotels);
+        }
+        
+        // GET: api/Hotels/5
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<SHotelResponse>> GetHotel(long id)
+        {
+            var hotel = await _hotelService.GetHotel(id);
             return Ok(hotel);
         }
 
         // PUT: api/Hotels/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotel(long id, HotelSchemas.SHotelMinimal data)
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult<SHotelResponse>> PutHotel(long id, SHotelUpdate data)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-
-            hotel.Name = data.Name;
-            hotel.Location = data.Location;
-            hotel.Rating = data.Rating ?? 0;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // POST: api/Hotels
-        [HttpPost]
-        public async Task<ActionResult<HotelSchemas.SHotelExtended>> PostHotel(HotelSchemas.SHotelMinimal data)
-        {
-            var hotel = new Hotel
-            {
-                Name = data.Name,
-                Location = data.Location,
-                Rating = data.Rating ?? 0,
-            };
-            _context.Hotels.Add(hotel);
-            await _context.SaveChangesAsync();
-
-            return await GetHotel(hotel.Id);
+            var hotel = await _hotelService.UpdateHotel(id, data);
+            return Ok(hotel);
         }
 
         // DELETE: api/Hotels/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHotel(long id)
+        [HttpDelete("{id:long}")]
+        public async Task<ActionResult> DeleteHotel(long id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-
-            _context.Hotels.Remove(hotel);
-            await _context.SaveChangesAsync();
-
+            await _hotelService.DeleteHotel(id);
             return NoContent();
         }
     }
