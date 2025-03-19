@@ -27,7 +27,7 @@ namespace bd.Controllers
         }
 
         // GET: api/Bookings/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:long}")]
         public async Task<ActionResult<Booking>> GetBooking(long id)
         {
             var booking = await _context.Bookings.Where(b => b.Id == id).ToBookingExtended().FirstOrDefaultAsync();
@@ -41,7 +41,7 @@ namespace bd.Controllers
         }
 
         // PUT: api/Bookings/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:long}")]
         public async Task<IActionResult> PutBooking(long id, BookingSchemas.SBookingMinimal data)
         {
             var booking = await _context.Bookings.FindAsync(id);
@@ -84,11 +84,11 @@ namespace bd.Controllers
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            return await GetBooking(booking.Id);
+            return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
 
         // DELETE: api/Bookings/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:long}")]
         public async Task<IActionResult> DeleteBooking(long id)
         {
             var booking = await _context.Bookings.FindAsync(id);

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using bd.Data;
-using bd.Models;
+using bd.Exceptions.Guest;
+using bd.Schemas.Guest;
+using bd.Services;
 
 namespace bd.Controllers
 {
@@ -15,86 +11,51 @@ namespace bd.Controllers
     public class GuestsController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IGuestService _guestService;
 
-        public GuestsController(MyDbContext context)
+        public GuestsController(MyDbContext context, IGuestService guestService)
         {
             _context = context;
-        }
-
-        // GET: api/Guests
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<GuestSchemas.SGuestExtended>>> GetGuests()
-        {
-            var guests = await _context.Guests.ToGuestExtended().ToListAsync();
-
-            return Ok(guests);
-        }
-
-        // GET: api/Guests/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GuestSchemas.SGuestExtended>> GetGuest(long id)
-        {
-            var guest = await _context.Guests.Where(g => g.Id == id).ToGuestExtended().FirstOrDefaultAsync();
-
-            if (guest == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(guest);
-        }
-
-        // PUT: api/Guests/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGuest(long id, GuestSchemas.SGuestMinimal data)
-        {
-            var guest = await _context.Guests.FindAsync(id);
-
-            if (guest == null)
-            {
-                return NotFound();
-            }
-
-            guest.FirstName = data.FirstName;
-            guest.LastName = data.LastName;
-            guest.Email = data.Email;
-            guest.Phone = data.Phone;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            _guestService = guestService;
         }
 
         // POST: api/Guests
         [HttpPost]
-        public async Task<ActionResult<GuestSchemas.SGuestExtended>> PostGuest(GuestSchemas.SGuestMinimal data)
+        public async Task<ActionResult<SGuestResponse>> PostGuest(SGuestCreate data)
         {
-            var guest = new Guest
-            {
-                FirstName = data.FirstName,
-                LastName = data.LastName,
-                Email = data.Email,
-                Phone = data.Phone,
-            };
-            _context.Guests.Add(guest);
-            await _context.SaveChangesAsync();
+            var guest = await _guestService.CreateGuest(data);
+            return CreatedAtAction(nameof(GetGuest), new { id = guest.Id }, guest);
+        }
+        
+        // GET: api/Guests/5
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<SGuestResponse>> GetGuest(long id)
+        {
+            var guest = await _guestService.GetGuest(id);
+            return Ok(guest);
+        }
+        
+        // GET: api/Guests
+        [HttpGet]
+        public async Task<ActionResult<SGuestResponse[]>> GetGuests()
+        {
+            var guests = await _guestService.GetGuests();
+            return Ok(guests);
+        }
 
-            return await GetGuest(guest.Id);
+        // PUT: api/Guests/5
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult<SGuestResponse>> PutGuest(long id, SGuestUpdate data)
+        {
+            var guest = await _guestService.UpdateGuest(id, data);
+            return Ok(guest);
         }
 
         // DELETE: api/Guests/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGuest(long id)
+        [HttpDelete("{id:long}")]
+        public async Task<ActionResult> DeleteGuest(long id)
         {
-            var guest = await _context.Guests.FindAsync(id);
-
-            if (guest== null)
-            {
-                return NotFound();
-            }
-
-            _context.Guests.Remove(guest);
-            await _context.SaveChangesAsync();
-
+            await _guestService.DeleteGuest(id);
             return NoContent();
         }
     }
