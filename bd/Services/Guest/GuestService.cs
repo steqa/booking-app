@@ -1,9 +1,8 @@
 using bd.Exceptions.Guest;
-using bd.Models;
 using bd.Repositories.Guest;
 using bd.Schemas.Guest;
 
-namespace bd.Services;
+namespace bd.Services.Guest;
 
 public class GuestService : IGuestService
 {
@@ -20,7 +19,7 @@ public class GuestService : IGuestService
         if (guest != null) 
             throw new EGuestEmailExists();
         
-        guest = await _guestRepository.CreateGuest(new Guest
+        guest = await _guestRepository.CreateGuest(new Models.Guest
         {
             FirstName = data.FirstName,
             LastName = data.LastName,
@@ -52,19 +51,20 @@ public class GuestService : IGuestService
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)
             throw new EGuestNotFound();
-        
-        guest = await _guestRepository.GetGuest(new GuestFilter { Email = data.Email });
-        if (guest != null) 
-            throw new EGuestEmailExists();
-        
-        guest = await _guestRepository.UpdateGuest(new Guest
+
+        if (guest.Email != data.Email)
         {
-            Id = id,
-            FirstName = data.FirstName,
-            LastName = data.LastName,
-            Email = data.Email,
-            Phone = data.Phone,
-        });
+            var existingGuest = await _guestRepository.GetGuest(new GuestFilter { Email = data.Email });
+            if (existingGuest != null) 
+                throw new EGuestEmailExists();
+        }
+        
+        guest.FirstName = data.FirstName;
+        guest.LastName = data.LastName;
+        guest.Email = data.Email;
+        guest.Phone = data.Phone;
+        
+        guest = await _guestRepository.UpdateGuest(guest);
         
         return new SGuestResponse(guest);
     }

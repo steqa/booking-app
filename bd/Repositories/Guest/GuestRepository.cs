@@ -30,7 +30,7 @@ public class GuestRepository : IGuestRepository
             }
             if (!string.IsNullOrEmpty(filter.Email))
             {
-                query = query.Where(g => g.Email.Contains(filter.Email));
+                query = query.Where(g => g.Email == filter.Email);
             }
         }
         return await query.FirstOrDefaultAsync();

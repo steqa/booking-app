@@ -1,6 +1,6 @@
 using bd.Schemas.Guest;
 
-namespace bd.Services;
+namespace bd.Services.Guest;
 
 public interface IGuestService
 {

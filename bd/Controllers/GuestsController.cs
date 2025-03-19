@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using bd.Data;
-using bd.Exceptions.Guest;
 using bd.Schemas.Guest;
-using bd.Services;
+using bd.Services.Guest;
 
 namespace bd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/guests")]
     [ApiController]
     public class GuestsController : ControllerBase
     {
-        private readonly MyDbContext _context;
         private readonly IGuestService _guestService;
 
-        public GuestsController(MyDbContext context, IGuestService guestService)
+        public GuestsController(IGuestService guestService)
         {
-            _context = context;
             _guestService = guestService;
         }
 
@@ -27,20 +23,20 @@ namespace bd.Controllers
             return CreatedAtAction(nameof(GetGuest), new { id = guest.Id }, guest);
         }
         
-        // GET: api/Guests/5
-        [HttpGet("{id:long}")]
-        public async Task<ActionResult<SGuestResponse>> GetGuest(long id)
-        {
-            var guest = await _guestService.GetGuest(id);
-            return Ok(guest);
-        }
-        
         // GET: api/Guests
         [HttpGet]
         public async Task<ActionResult<SGuestResponse[]>> GetGuests()
         {
             var guests = await _guestService.GetGuests();
             return Ok(guests);
+        }
+        
+        // GET: api/Guests/5
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<SGuestResponse>> GetGuest(long id)
+        {
+            var guest = await _guestService.GetGuest(id);
+            return Ok(guest);
         }
 
         // PUT: api/Guests/5
