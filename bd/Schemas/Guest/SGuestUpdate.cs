@@ -56,6 +56,6 @@ public class SGuestUpdate
             errors.Add("phone", phoneErrors);
 
         if (errors.Count != 0)
-            throw new EValidation(errors);
+            throw new EHttpValidation(errors);
     }
 }

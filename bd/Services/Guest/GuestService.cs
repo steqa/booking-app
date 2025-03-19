@@ -17,7 +17,7 @@ public class GuestService : IGuestService
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Email = data.Email });
         if (guest != null) 
-            throw new EGuestEmailExists();
+            throw new EHttpGuestEmailExists();
         
         guest = await _guestRepository.CreateGuest(new Models.Guest
         {
@@ -34,7 +34,7 @@ public class GuestService : IGuestService
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)
-            throw new EGuestNotFound();
+            throw new EHttpGuestNotFound();
 
         return new SGuestResponse(guest);
     }
@@ -50,13 +50,13 @@ public class GuestService : IGuestService
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)
-            throw new EGuestNotFound();
+            throw new EHttpGuestNotFound();
 
         if (guest.Email != data.Email)
         {
             var existingGuest = await _guestRepository.GetGuest(new GuestFilter { Email = data.Email });
             if (existingGuest != null) 
-                throw new EGuestEmailExists();
+                throw new EHttpGuestEmailExists();
         }
         
         guest.FirstName = data.FirstName;
@@ -73,7 +73,7 @@ public class GuestService : IGuestService
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)
-            throw new EGuestNotFound();
+            throw new EHttpGuestNotFound();
         
         await _guestRepository.DeleteGuest(id);
     }

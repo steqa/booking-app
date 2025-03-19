@@ -15,7 +15,6 @@ namespace bd.Controllers
             _guestService = guestService;
         }
 
-        // POST: api/Guests
         [HttpPost]
         public async Task<ActionResult<SGuestResponse>> PostGuest(SGuestCreate data)
         {
@@ -23,7 +22,6 @@ namespace bd.Controllers
             return CreatedAtAction(nameof(GetGuest), new { id = guest.Id }, guest);
         }
         
-        // GET: api/Guests
         [HttpGet]
         public async Task<ActionResult<SGuestResponse[]>> GetGuests()
         {
@@ -31,7 +29,6 @@ namespace bd.Controllers
             return Ok(guests);
         }
         
-        // GET: api/Guests/5
         [HttpGet("{id:long}")]
         public async Task<ActionResult<SGuestResponse>> GetGuest(long id)
         {
@@ -39,7 +36,6 @@ namespace bd.Controllers
             return Ok(guest);
         }
 
-        // PUT: api/Guests/5
         [HttpPut("{id:long}")]
         public async Task<ActionResult<SGuestResponse>> PutGuest(long id, SGuestUpdate data)
         {
@@ -47,7 +43,6 @@ namespace bd.Controllers
             return Ok(guest);
         }
 
-        // DELETE: api/Guests/5
         [HttpDelete("{id:long}")]
         public async Task<ActionResult> DeleteGuest(long id)
         {

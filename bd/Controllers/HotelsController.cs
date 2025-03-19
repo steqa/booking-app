@@ -15,7 +15,6 @@ namespace bd.Controllers
             _hotelService = hotelService;
         }
         
-        // POST: api/Hotels
         [HttpPost]
         public async Task<ActionResult<SHotelResponse>> PostHotel(SHotelCreate data)
         {
@@ -23,7 +22,6 @@ namespace bd.Controllers
             return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, hotel);
         }
 
-        // GET: api/Hotels
         [HttpGet]
         public async Task<ActionResult<SHotelResponse[]>> GetHotels()
         {
@@ -31,7 +29,6 @@ namespace bd.Controllers
             return Ok(hotels);
         }
         
-        // GET: api/Hotels/Rooms
         [HttpGet("rooms")]
         public async Task<ActionResult<SHotelRoomsResponse[]>> GetHotelsRooms()
         {
@@ -39,7 +36,6 @@ namespace bd.Controllers
             return Ok(hotels);
         }
         
-        // GET: api/Hotels/5
         [HttpGet("{id:long}")]
         public async Task<ActionResult<SHotelResponse>> GetHotel(long id)
         {
@@ -47,7 +43,6 @@ namespace bd.Controllers
             return Ok(hotel);
         }
 
-        // PUT: api/Hotels/5
         [HttpPut("{id:long}")]
         public async Task<ActionResult<SHotelResponse>> PutHotel(long id, SHotelUpdate data)
         {
@@ -55,7 +50,6 @@ namespace bd.Controllers
             return Ok(hotel);
         }
 
-        // DELETE: api/Hotels/5
         [HttpDelete("{id:long}")]
         public async Task<ActionResult> DeleteHotel(long id)
         {

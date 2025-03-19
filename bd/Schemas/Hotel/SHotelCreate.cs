@@ -42,6 +42,6 @@ public class SHotelCreate
             errors.Add("rating", ratingErrors);
 
         if (errors.Count != 0)
-            throw new EValidation(errors);
+            throw new EHttpValidation(errors);
     }
 }

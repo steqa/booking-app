@@ -29,7 +29,7 @@ public class HotelService : IHotelService
     {
         var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = id });
         if (hotel == null)
-            throw new EHotelNotFound();
+            throw new EHttpHotelNotFound();
 
         return new SHotelResponse(hotel);
     }
@@ -52,7 +52,7 @@ public class HotelService : IHotelService
     {
         var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = id });
         if (hotel == null)
-            throw new EHotelNotFound();
+            throw new EHttpHotelNotFound();
         
         hotel.Name = data.Name;
         hotel.Location = data.Location;
@@ -67,7 +67,7 @@ public class HotelService : IHotelService
     {
         var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = id });
         if (hotel == null)
-            throw new EHotelNotFound();
+            throw new EHttpHotelNotFound();
         
         await _hotelRepository.DeleteHotel(id);
     }
