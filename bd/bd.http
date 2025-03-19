@@ -1,0 +1,6 @@
+@bd_HostAddress = http://localhost:5154
+
+GET {{bd_HostAddress}}/api/hotels
+Accept: application/json
+
+###
