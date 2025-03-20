@@ -1,115 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using bd.Schemas.Room;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using bd.Data;
-using bd.Models;
+using bd.Services.Room;
 
 namespace bd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/rooms")]
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly IRoomService _roomService;
 
-        public RoomsController(MyDbContext context)
+        public RoomsController(IRoomService roomService)
         {
-            _context = context;
+            _roomService = roomService;
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult<SRoomResponse>> PostRoom(SRoomCreate data)
+        {
+            var room = await _roomService.CreateRoom(data);
+            return CreatedAtAction(nameof(GetRoom), new { id = room.Id }, room);
         }
 
-        // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RoomSchemas.SRoomExtended>>> GetRooms()
+        public async Task<ActionResult<SRoomResponse[]>> GetRooms()
         {
-            var rooms = await _context.Rooms.ToRoomExtended().ToListAsync();
-
+            var rooms = await _roomService.GetRooms();
             return Ok(rooms);
         }
-
-        // GET: api/Rooms/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<RoomSchemas.SRoomExtended>> GetRoom(long id)
+        
+        [HttpGet("bookings")]
+        public async Task<ActionResult<SRoomBookingsResponse[]>> GetRoomsBookings()
         {
-            var room = await _context.Rooms.Where(r => r.Id == id).ToRoomExtended().FirstOrDefaultAsync();
-
-            if (room == null)
-            {
-                return NotFound();
-            }
-
+            var rooms = await _roomService.GetRoomsBookings();
+            return Ok(rooms);
+        }
+        
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<SRoomResponse>> GetRoom(long id)
+        {
+            var room = await _roomService.GetRoom(id);
             return Ok(room);
         }
 
-        // PUT: api/Rooms/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(long id, RoomSchemas.SRoomMinimal data)
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult<SRoomResponse>> PutRoom(long id, SRoomUpdate data)
         {
-            var room = await _context.Rooms.FindAsync(id);
-            var hotel = await _context.Hotels.FindAsync(data.HotelId);
-
-            if (room == null || hotel == null)
-            {
-                return NotFound();
-            }
-
-            room.HotelId = data.HotelId;
-            room.RoomNumber = data.RoomNumber;
-            room.PricePerDay = data.PricePerDay;
-            room.IsAvailable = data.IsAvailable ?? true;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var room = await _roomService.UpdateRoom(id, data);
+            return Ok(room);
         }
 
-        // POST: api/Rooms
-        [HttpPost]
-        public async Task<ActionResult<RoomSchemas.SRoomExtended>> PostRoom(RoomSchemas.SRoomMinimal data)
+        [HttpDelete("{id:long}")]
+        public async Task<ActionResult> DeleteRoom(long id)
         {
-            var hotel = await _context.Hotels.FindAsync(data.HotelId);
-
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-
-            var room = new Room
-            {
-                HotelId = data.HotelId,
-                RoomNumber = data.RoomNumber,
-                PricePerDay = data.PricePerDay,
-                IsAvailable = data.IsAvailable ?? true,
-            };
-            _context.Rooms.Add(room);
-            await _context.SaveChangesAsync();
-
-            return await GetRoom(room.Id);
-        }
-
-        // DELETE: api/Rooms/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(long id)
-        {
-            var room = await _context.Rooms.FindAsync(id);
-
-            if (room == null)
-            {
-                return NotFound();
-            }
-            
-            var booking = await _context.Bookings.Where(b => b.RoomId == room.Id).FirstOrDefaultAsync();
-
-            if (booking != null)
-            {
-                return Conflict();
-            }
-
-            _context.Rooms.Remove(room);
-            await _context.SaveChangesAsync();
-
+            await _roomService.DeleteRoom(id);
             return NoContent();
         }
     }

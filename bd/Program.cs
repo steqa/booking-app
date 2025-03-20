@@ -2,8 +2,10 @@ using bd.Data;
 using bd.Exceptions;
 using bd.Repositories.Guest;
 using bd.Repositories.Hotel;
+using bd.Repositories.Room;
 using bd.Services.Guest;
 using bd.Services.Hotel;
+using bd.Services.Room;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +21,12 @@ builder.Services.AddDbContext<MyDbContext>();
 // Add Repositories
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 // Add Services
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 // Add Exception Handler
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();

@@ -26,7 +26,7 @@ public class HotelRepository : IHotelRepository
         {
             if (filter.Id.HasValue)
             {
-                query = query.Where(g => g.Id == filter.Id);
+                query = query.Where(h => h.Id == filter.Id);
             }
         }
         return await query.FirstOrDefaultAsync();
