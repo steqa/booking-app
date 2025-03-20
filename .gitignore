@@ -366,3 +366,4 @@ FodyWeavers.xsd
 .venv
 
 .idea
+smtp_settings.json

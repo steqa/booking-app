@@ -1,0 +1,11 @@
+{
+  "SmtpSettings": {
+    "Host": "connect.com",
+    "Port": 5252,
+    "Username": "user@name.com",
+    "Password": "strongPassword",
+    "FromEmail": "info@name.com",
+    "FromName": "Booking Service",
+    "EnableSsl": false
+  }
+}

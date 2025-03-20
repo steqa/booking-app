@@ -1,0 +1,7 @@
+{
+  "GrpcClientSettings": {
+    "ConnectionStrings": {
+      "Http": "http://localhost:5023"
+    }
+  }
+}

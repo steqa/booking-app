@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServer";
+
+package Email;
+
+service EmailNotificationService {
+  rpc SendBookingConfirmation (BookingConfirmationRequest) returns (MessageResponse);
+}
+
+message BookingConfirmationRequest {
+  string guest_name = 1;
+  string guest_email = 2;
+  string hotel_name = 3;
+  string room_number = 4;
+  string check_in_date = 5;
+  string check_out_date = 6;
+}
+
+message MessageResponse {
+  string message = 1;
+}
