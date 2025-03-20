@@ -1,106 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using bd.Data;
-using bd.Models;
-using static RoomSchemas;
+using bd.Schemas.Booking;
+using bd.Services.Booking;
 
 namespace bd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/bookings")]
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly IBookingService _bookingService;
 
-        public BookingsController(MyDbContext context)
+        public BookingsController(IBookingService bookingService)
         {
-            _context = context;
+            _bookingService = bookingService;
         }
-
-        // GET: api/Bookings
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
-        {
-            var bookings = await _context.Bookings.ToBookingExtended().ToListAsync();
-
-            return Ok(bookings);
-        }
-
-        // GET: api/Bookings/5
-        [HttpGet("{id:long}")]
-        public async Task<ActionResult<Booking>> GetBooking(long id)
-        {
-            var booking = await _context.Bookings.Where(b => b.Id == id).ToBookingExtended().FirstOrDefaultAsync();
-
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(booking);
-        }
-
-        // PUT: api/Bookings/5
-        [HttpPut("{id:long}")]
-        public async Task<IActionResult> PutBooking(long id, BookingSchemas.SBookingMinimal data)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
-            var guest = await _context.Guests.FindAsync(data.GuestId);
-            var room = await _context.Rooms.FindAsync(data.RoomId);
-
-            if (booking == null || guest == null || room == null)
-            {
-                return NotFound();
-            }
-
-            booking.GuestId = data.GuestId;
-            booking.RoomId = data.RoomId;
-            booking.CheckIn = data.CheckIn;
-            booking.CheckOut = data.CheckOut;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // POST: api/Bookings
+        
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(BookingSchemas.SBookingMinimal data)
+        public async Task<ActionResult<SBookingResponse>> PostBooking(SBookingCreate data)
         {
-            var guest = await _context.Guests.FindAsync(data.GuestId);
-            var room = await _context.Rooms.FindAsync(data.RoomId);
-
-            if (guest == null || room == null)
-            {
-                return NotFound();
-            }
-
-            var booking = new Booking
-            {
-                GuestId = data.GuestId,
-                RoomId = data.RoomId,
-                CheckIn = data.CheckIn,
-                CheckOut = data.CheckOut,
-            };
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
+            var booking = await _bookingService.CreateBooking(data);
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
 
-        // DELETE: api/Bookings/5
-        [HttpDelete("{id:long}")]
-        public async Task<IActionResult> DeleteBooking(long id)
+        [HttpGet]
+        public async Task<ActionResult<SBookingResponse[]>> GetBookings()
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var bookings = await _bookingService.GetBookings();
+            return Ok(bookings);
+        }
+        
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<SBookingResponse>> GetBooking(long id)
+        {
+            var booking = await _bookingService.GetBooking(id);
+            return Ok(booking);
+        }
 
-            if (booking == null)
-            {
-                return NotFound();
-            }
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult<SBookingResponse>> PutBooking(long id, SBookingUpdate data)
+        {
+            var booking = await _bookingService.UpdateBooking(id, data);
+            return Ok(booking);
+        }
 
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
-
+        [HttpDelete("{id:long}")]
+        public async Task<ActionResult> DeleteRoom(long id)
+        {
+            await _bookingService.DeleteBooking(id);
             return NoContent();
         }
     }

@@ -1,31 +1,28 @@
-using bd.Exceptions.Hotel;
 using bd.Exceptions.Room;
-using bd.Repositories.Hotel;
 using bd.Repositories.Room;
 using bd.Schemas.Room;
+using bd.Services.Hotel;
 
 namespace bd.Services.Room;
 
 public class RoomService : IRoomService
 {
     private readonly IRoomRepository _roomRepository;
-    private readonly IHotelRepository _hotelRepository;
+    private readonly IHotelService _hotelService;
 
-    public RoomService(IRoomRepository roomRepository, IHotelRepository hotelRepository)
+    public RoomService(IRoomRepository roomRepository, IHotelService hotelService)
     {
         _roomRepository = roomRepository;
-        _hotelRepository = hotelRepository;
+        _hotelService = hotelService;
     }
 
     public async Task<SRoomResponse> CreateRoom(SRoomCreate data)
     {
-        var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = data.HotelId });
-        if (hotel == null)
-            throw new EHttpHotelNotFound();
+        var hotel = await _hotelService.GetHotel(data.HotelId);
         
         var room = await _roomRepository.CreateRoom(new Models.Room
         {
-            HotelId = data.HotelId,
+            HotelId = hotel.Id,
             RoomNumber = data.RoomNumber,
             PricePerDay = data.PricePerDay,
             IsAvailable = data.IsAvailable ?? true,
@@ -34,7 +31,7 @@ public class RoomService : IRoomService
         return new SRoomResponse(room);
     }
     
-    public async Task<SRoomResponse?> GetRoom(long id)
+    public async Task<SRoomResponse> GetRoom(long id)
     {
         var room = await _roomRepository.GetRoom(new RoomFilter { Id = id });
         if (room == null)
@@ -57,17 +54,15 @@ public class RoomService : IRoomService
         return rooms.Select(room => new SRoomBookingsResponse(room)).ToArray();
     }
 
-    public async Task<SRoomResponse?> UpdateRoom(long id, SRoomUpdate data)
+    public async Task<SRoomResponse> UpdateRoom(long id, SRoomUpdate data)
     {
         var room = await _roomRepository.GetRoom(new RoomFilter { Id = id });
         if (room == null)
             throw new EHttpRoomNotFound();
         
-        var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = data.HotelId });
-        if (hotel == null)
-            throw new EHttpHotelNotFound();
+        var hotel = await _hotelService.GetHotel(data.HotelId);
         
-        room.HotelId = data.HotelId;
+        room.HotelId = hotel.Id;
         room.RoomNumber = data.RoomNumber;
         room.PricePerDay = data.PricePerDay;
         room.IsAvailable = data.IsAvailable ?? true;

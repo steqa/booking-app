@@ -25,7 +25,7 @@ public class HotelService : IHotelService
         return new SHotelResponse(hotel);
     }
     
-    public async Task<SHotelResponse?> GetHotel(long id)
+    public async Task<SHotelResponse> GetHotel(long id)
     {
         var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = id });
         if (hotel == null)
@@ -48,7 +48,7 @@ public class HotelService : IHotelService
         return hotels.Select(hotel => new SHotelRoomsResponse(hotel)).ToArray();
     }
 
-    public async Task<SHotelResponse?> UpdateHotel(long id, SHotelUpdate data)
+    public async Task<SHotelResponse> UpdateHotel(long id, SHotelUpdate data)
     {
         var hotel = await _hotelRepository.GetHotel(new HotelFilter { Id = id });
         if (hotel == null)

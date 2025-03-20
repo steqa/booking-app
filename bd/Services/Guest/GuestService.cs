@@ -30,7 +30,7 @@ public class GuestService : IGuestService
         return new SGuestResponse(guest);
     }
     
-    public async Task<SGuestResponse?> GetGuest(long id)
+    public async Task<SGuestResponse> GetGuest(long id)
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)
@@ -46,7 +46,7 @@ public class GuestService : IGuestService
         return guests.Select(guest => new SGuestResponse(guest)).ToArray();
     }
 
-    public async Task<SGuestResponse?> UpdateGuest(long id, SGuestUpdate data)
+    public async Task<SGuestResponse> UpdateGuest(long id, SGuestUpdate data)
     {
         var guest = await _guestRepository.GetGuest(new GuestFilter { Id = id });
         if (guest == null)

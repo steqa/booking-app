@@ -1,8 +1,10 @@
 using bd.Data;
 using bd.Exceptions;
+using bd.Repositories.Booking;
 using bd.Repositories.Guest;
 using bd.Repositories.Hotel;
 using bd.Repositories.Room;
+using bd.Services.Booking;
 using bd.Services.Guest;
 using bd.Services.Hotel;
 using bd.Services.Room;
@@ -22,11 +24,13 @@ builder.Services.AddDbContext<MyDbContext>();
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 // Add Services
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 // Add Exception Handler
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
