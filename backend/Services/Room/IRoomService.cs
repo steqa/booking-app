@@ -1,0 +1,13 @@
+using backend.Schemas.Room;
+
+namespace backend.Services.Room;
+
+public interface IRoomService
+{
+    Task<SRoomResponse> CreateRoom(SRoomCreate data);
+    Task<SRoomResponse> GetRoom(long id);
+    Task<SRoomResponse[]> GetRooms();
+    Task<SRoomBookingsResponse[]> GetRoomsBookings();
+    Task<SRoomResponse> UpdateRoom(long id, SRoomUpdate data);
+    Task DeleteRoom(long id);
+}
