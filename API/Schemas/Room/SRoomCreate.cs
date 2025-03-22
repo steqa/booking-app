@@ -16,21 +16,15 @@ public class SRoomCreate
         PricePerDay = pricePerDay;
         IsAvailable = isAvailable ?? true;
         
-        var hotelIdErrors = new List<string>();
-        if (HotelId < 1)
-            hotelIdErrors.Add("Hotel Id must be greater than or equal to 1.");
+        _validate();
+    }
+    
+    private void _validate()
+    {
+        var hotelIdErrors = Validator.ValidateHotelId(HotelId);
+        var roomNumberErrors = Validator.ValidateRoomNumber(RoomNumber);
+        var pricePerDayErrors = Validator.ValidatePricePerDay(PricePerDay);
         
-        var roomNumberErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(RoomNumber))
-            roomNumberErrors.Add("Room Number is required.");
-        else
-            if (RoomNumber.Length > 10)
-                roomNumberErrors.Add("Room Number cannot be longer than 10 characters.");
-        
-        var pricePerDayErrors = new List<string>();
-        if (PricePerDay < 0)
-            pricePerDayErrors.Add("Price Per Day must be greater than or equal to 0.");
-
         var errors = new Dictionary<string, List<string>>();
 
         if (hotelIdErrors.Count > 0)

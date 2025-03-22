@@ -14,24 +14,15 @@ public class SHotelUpdate
         Location = location;
         Rating = rating ?? 0;
 
-        var nameErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(Name))
-            nameErrors.Add("Name is required.");
-        else
-            if (Name.Length > 255)
-                nameErrors.Add("Name cannot be longer than 255 characters.");
+        _validate();
+    }
+    
+    private void _validate()
+    {
+        var nameErrors = Validator.ValidateName(Name);
+        var locationErrors = Validator.ValidateLocation(Location);
+        var ratingErrors = Validator.ValidateRating(Rating);
         
-        var locationErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(Location))
-            locationErrors.Add("Location is required.");
-        else
-            if (Location.Length > 255)
-                locationErrors.Add("Location cannot be longer than 255 characters.");
-        
-        var ratingErrors = new List<string>();
-        if (rating < 0 || rating > 5)
-            ratingErrors.Add("Rating must be between 0 and 5.");
-
         var errors = new Dictionary<string, List<string>>();
 
         if (nameErrors.Count > 0)

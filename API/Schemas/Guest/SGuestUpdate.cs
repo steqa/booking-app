@@ -16,34 +16,16 @@ public class SGuestUpdate
         Email = email;
         Phone = phone;
         
-        var firstNameErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(FirstName))
-            firstNameErrors.Add("First Name is required.");
-        else
-            if (FirstName.Length > 100)
-                firstNameErrors.Add("First Name cannot be longer than 100 characters.");
+        _validate();
+    }
+    
+    private void _validate()
+    {
+        var firstNameErrors = Validator.ValidateFirstName(FirstName);
+        var lastNameErrors = Validator.ValidateLastName(LastName);
+        var emailErrors = Validator.ValidateEmail(Email);
+        var phoneErrors = Validator.ValidatePhone(Phone);
         
-        var lastNameErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(LastName))
-            lastNameErrors.Add("Last Name is required.");
-        else
-            if (LastName.Length > 100)
-                lastNameErrors.Add("Last Name cannot be longer than 100 characters.");
-        
-        var emailErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(Email))
-            emailErrors.Add("Email is required.");
-        else
-            if (Email.Length > 100)
-                emailErrors.Add("Email cannot be longer than 100 characters.");
-        
-        var phoneErrors = new List<string>();
-        if (string.IsNullOrWhiteSpace(Phone))
-            phoneErrors.Add("Phone is required.");
-        else
-            if (Phone.Length > 100)
-                phoneErrors.Add("Phone cannot be longer than 100 characters.");
-
         var errors = new Dictionary<string, List<string>>();
 
         if (firstNameErrors.Count > 0)

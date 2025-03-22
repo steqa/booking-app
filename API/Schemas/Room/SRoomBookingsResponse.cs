@@ -9,9 +9,9 @@ public class SRoomBookingsResponse
     public required string RoomNumber { get; set; }
     public required long PricePerDay { get; set; }
     public required bool IsAvailable { get; set; }
-    public List<SBooking> Bookings { get; set; }
+    public List<SRoomBookingsResponseBooking> Bookings { get; set; }
 
-    public class SBooking
+    public class SRoomBookingsResponseBooking
     {
         public required long Id { get; set; }
         public required long GuestId { get; set; }
@@ -27,7 +27,7 @@ public class SRoomBookingsResponse
         RoomNumber = room.RoomNumber;
         PricePerDay = room.PricePerDay;
         IsAvailable = room.IsAvailable;
-        Bookings = room.Bookings.Select(b => new SBooking
+        Bookings = room.Bookings.Select(b => new SRoomBookingsResponseBooking
         {
             Id = b.Id,
             GuestId = b.GuestId,

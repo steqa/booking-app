@@ -8,7 +8,7 @@ public class SBookingCreate
     public long RoomId { get; }
     public DateTime CheckIn { get; }
     public DateTime CheckOut { get; }
-
+    
     public SBookingCreate(long guestId, long roomId, DateTime checkIn, DateTime checkOut)
     {
         GuestId = guestId;
@@ -16,13 +16,13 @@ public class SBookingCreate
         CheckIn = checkIn;
         CheckOut = checkOut;
         
-        var guestIdErrors = new List<string>();
-        if (GuestId < 1)
-            guestIdErrors.Add("Guest Id must be greater than or equal to 1.");
-        
-        var roomIdErrors = new List<string>();
-        if (RoomId < 1)
-            roomIdErrors.Add("Room Id must be greater than or equal to 1.");
+        _validate();
+    }
+
+    private void _validate()
+    {
+        var guestIdErrors = Validator.ValidateGuestId(GuestId);
+        var roomIdErrors = Validator.ValidateRoomId(RoomId);
         
         var errors = new Dictionary<string, List<string>>();
 

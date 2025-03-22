@@ -1,6 +1,6 @@
 ﻿version: "3.8"
 
-name: bd
+name: booking-app
 
 services:
   db:

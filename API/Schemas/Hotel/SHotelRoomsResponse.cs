@@ -8,9 +8,9 @@ public class SHotelRoomsResponse
     public required string Name { get; set; }
     public required string Location { get; set; }
     public required decimal Rating { get; set; }
-    public List<SRoom> Rooms { get; set; }
+    public List<SHotelRoomsResponseRoom> Rooms { get; set; }
 
-    public class SRoom
+    public class SHotelRoomsResponseRoom
     {
         public required long Id { get; set; }
         public required string RoomNumber { get; set; }
@@ -25,7 +25,7 @@ public class SHotelRoomsResponse
         Name = hotel.Name;
         Location = hotel.Location;
         Rating = hotel.Rating;
-        Rooms = hotel.Rooms.Select(r => new SRoom
+        Rooms = hotel.Rooms.Select(r => new SHotelRoomsResponseRoom
         {
             Id = r.Id,
             RoomNumber = r.RoomNumber,
