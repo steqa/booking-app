@@ -13,7 +13,7 @@ public class SHotelRoomsResponse
     public class SHotelRoomsResponseRoom
     {
         public required long Id { get; set; }
-        public required string RoomNumber { get; set; }
+        public required string Number { get; set; }
         public required long PricePerDay { get; set; }
         public required bool IsAvailable { get; set; }
     }
@@ -28,7 +28,7 @@ public class SHotelRoomsResponse
         Rooms = hotel.Rooms.Select(r => new SHotelRoomsResponseRoom
         {
             Id = r.Id,
-            RoomNumber = r.RoomNumber,
+            Number = r.Number,
             PricePerDay = r.PricePerDay,
             IsAvailable = r.IsAvailable
         }).ToList();

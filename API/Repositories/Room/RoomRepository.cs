@@ -5,9 +5,9 @@ namespace backend.Repositories.Room;
 
 public class RoomRepository : IRoomRepository
 {
-    private readonly MyDbContext _context;
+    private readonly AppDbContext _context;
 
-    public RoomRepository(MyDbContext context)
+    public RoomRepository(AppDbContext context)
     {
         _context = context;
     }

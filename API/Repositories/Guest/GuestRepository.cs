@@ -5,9 +5,9 @@ namespace backend.Repositories.Guest;
 
 public class GuestRepository : IGuestRepository
 {
-    private readonly MyDbContext _context;
+    private readonly AppDbContext _context;
 
-    public GuestRepository(MyDbContext context)
+    public GuestRepository(AppDbContext context)
     {
         _context = context;
     }

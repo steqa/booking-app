@@ -23,7 +23,7 @@ public class RoomService : IRoomService
         var room = await _roomRepository.CreateRoom(new Models.Room
         {
             HotelId = hotel.Id,
-            RoomNumber = data.RoomNumber,
+            Number = data.Number,
             PricePerDay = data.PricePerDay,
             IsAvailable = data.IsAvailable ?? true,
         });
@@ -63,7 +63,7 @@ public class RoomService : IRoomService
         var hotel = await _hotelService.GetHotel(data.HotelId);
         
         room.HotelId = hotel.Id;
-        room.RoomNumber = data.RoomNumber;
+        room.Number = data.Number;
         room.PricePerDay = data.PricePerDay;
         room.IsAvailable = data.IsAvailable ?? true;
         

@@ -36,4 +36,8 @@
     <Protobuf Include="GRPC\Client\Protos\email_notification.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

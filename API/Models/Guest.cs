@@ -1,19 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models;
 
+[Table("guests")]
 public partial class Guest
 {
+    [Key]
     public long Id { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    [Column("first_name")]
+    [Required]
+    [MaxLength(100)]
+    public string FirstName { get; set; }
 
-    public string LastName { get; set; } = null!;
+    [Column("last_name")]
+    [Required]
+    [MaxLength(100)]
+    public string LastName { get; set; }
 
-    public string Email { get; set; } = null!;
+    [Column("email")]
+    [Required]
+    [MaxLength(100)]
+    public string Email { get; set; }
 
-    public string Phone { get; set; } = null!;
+    [Column("phone")]
+    [Required]
+    [MaxLength(15)]
+    public string Phone { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public virtual ICollection<Booking> Bookings { get; set; }
 }

@@ -5,9 +5,9 @@ namespace backend.Repositories.Hotel;
 
 public class HotelRepository : IHotelRepository
 {
-    private readonly MyDbContext _context;
+    private readonly AppDbContext _context;
 
-    public HotelRepository(MyDbContext context)
+    public HotelRepository(AppDbContext context)
     {
         _context = context;
     }

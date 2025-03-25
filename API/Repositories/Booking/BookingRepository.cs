@@ -5,9 +5,9 @@ namespace backend.Repositories.Booking;
 
 public class BookingRepository : IBookingRepository
 {
-    private readonly MyDbContext _context;
+    private readonly AppDbContext _context;
 
-    public BookingRepository(MyDbContext context)
+    public BookingRepository(AppDbContext context)
     {
         _context = context;
     }

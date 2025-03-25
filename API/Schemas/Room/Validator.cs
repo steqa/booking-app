@@ -10,17 +10,17 @@ public static class Validator
         return errors;
     }
     
-    public static List<string> ValidateRoomNumber(string roomNumber)
+    public static List<string> ValidateNumber(string number)
     {
         var errors = new List<string>();
-        if (string.IsNullOrWhiteSpace(roomNumber))
+        if (string.IsNullOrWhiteSpace(number))
         {
-            errors.Add("Room Number is required.");
+            errors.Add("Number is required.");
         }
         else
         {
-            if (roomNumber.Length > 10)
-                errors.Add("Room Number cannot be longer than 10 characters.");
+            if (number.Length > 10)
+                errors.Add("Number cannot be longer than 10 characters.");
         }
         return errors;
     }

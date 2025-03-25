@@ -48,7 +48,7 @@ public class BookingService : IBookingService
             guestName: guest.FirstName,
             guestEmail: guest.Email,
             hotelName: hotel.Name,
-            roomNumber: room.RoomNumber,
+            roomNumber: room.Number,
             checkInDate: booking.CheckIn.ToString("dd.MM.yyyy HH:mm"),
             checkOutDate: booking.CheckOut.ToString("dd.MM.yyyy HH:mm"));
         

@@ -5,14 +5,14 @@ namespace backend.Schemas.Room;
 public class SRoomUpdate
 {
     public long HotelId { get; }
-    public string RoomNumber { get; }
+    public string Number { get; }
     public long PricePerDay { get; }
     public bool? IsAvailable { get; }
 
-    public SRoomUpdate(long hotelId, string roomNumber, long pricePerDay, bool? isAvailable)
+    public SRoomUpdate(long hotelId, string number, long pricePerDay, bool? isAvailable)
     {
         HotelId = hotelId;
-        RoomNumber = roomNumber;
+        Number = number;
         PricePerDay = pricePerDay;
         IsAvailable = isAvailable ?? true;
         
@@ -22,15 +22,15 @@ public class SRoomUpdate
     private void _validate()
     {
         var hotelIdErrors = Validator.ValidateHotelId(HotelId);
-        var roomNumberErrors = Validator.ValidateRoomNumber(RoomNumber);
+        var numberErrors = Validator.ValidateNumber(Number);
         var pricePerDayErrors = Validator.ValidatePricePerDay(PricePerDay);
         
         var errors = new Dictionary<string, List<string>>();
 
         if (hotelIdErrors.Count > 0)
             errors.Add("hotelId", hotelIdErrors);
-        if (roomNumberErrors.Count > 0)
-            errors.Add("roomNumber", roomNumberErrors);
+        if (numberErrors.Count > 0)
+            errors.Add("roomNumber", numberErrors);
         if (pricePerDayErrors.Count > 0)
             errors.Add("pricePerDay", pricePerDayErrors);
 

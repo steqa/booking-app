@@ -9,6 +9,7 @@ using backend.Services.Booking;
 using backend.Services.Guest;
 using backend.Services.Hotel;
 using backend.Services.Room;
+using Microsoft.EntityFrameworkCore;
 using GrpcClientSettings = backend.GRPC.Client.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<MyDbContext>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Repositories
 builder.Services.AddScoped<IGuestRepository, GuestRepository>();
@@ -44,9 +46,25 @@ builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Configuration.AddJsonFile("GRPC/Client/settings.json", optional: false, reloadOnChange: true);
 builder.Services.Configure<GrpcClientSettings>(builder.Configuration.GetSection("GrpcClientSettings"));
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Allow",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+});
+
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseCors("Allow");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

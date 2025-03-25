@@ -6,7 +6,7 @@ public class SRoomResponse
 {
     public required long Id { get; set; }
     public required long HotelId { get; set; }
-    public required string RoomNumber { get; set; }
+    public required string Number { get; set; }
     public required long PricePerDay { get; set; }
     public required bool IsAvailable { get; set; }
 
@@ -15,7 +15,7 @@ public class SRoomResponse
     {
         Id = room.Id;
         HotelId = room.HotelId;
-        RoomNumber = room.RoomNumber;
+        Number = room.Number;
         PricePerDay = room.PricePerDay;
         IsAvailable = room.IsAvailable;
     }
