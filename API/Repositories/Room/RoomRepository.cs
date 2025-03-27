@@ -1,4 +1,5 @@
 using backend.Data;
+using backend.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Room;
@@ -32,9 +33,22 @@ public class RoomRepository : IRoomRepository
         return await query.FirstOrDefaultAsync();
     }
     
-    public async Task<Models.Room[]> GetRooms()
+    public async Task<Models.Room[]> GetRooms(RoomFilter? filter)
     {
-        return await _context.Rooms.ToArrayAsync();
+        IQueryable<Models.Room> query = _context.Rooms;
+        if (filter != null)
+        {
+            if (filter.Id.HasValue)
+            {
+                query = query.Where(r => r.Id == filter.Id);
+            }
+
+            if (filter.hotelId.HasValue)
+            {
+                query = query.Where(r => r.HotelId == filter.hotelId);
+            }
+        }
+        return await query.ToArrayAsync();
     }
 
     public async Task<Models.Room[]> GetRoomsBookings()

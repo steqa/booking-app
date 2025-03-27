@@ -1,4 +1,5 @@
-﻿using backend.Schemas.Room;
+﻿using backend.Filters;
+using backend.Schemas.Room;
 using backend.Services.Room;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +24,9 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<SRoomResponse[]>> GetRooms()
+        public async Task<ActionResult<SRoomResponse[]>> GetRooms([FromQuery]long? hotelId)
         {
-            var rooms = await _roomService.GetRooms();
+            var rooms = await _roomService.GetRooms(new RoomFilter {hotelId = hotelId});
             return Ok(rooms);
         }
         

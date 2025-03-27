@@ -1,4 +1,5 @@
 using backend.Exceptions.Room;
+using backend.Filters;
 using backend.Repositories.Room;
 using backend.Schemas.Room;
 using backend.Services.Hotel;
@@ -40,9 +41,9 @@ public class RoomService : IRoomService
         return new SRoomResponse(room);
     }
     
-    public async Task<SRoomResponse[]> GetRooms()
+    public async Task<SRoomResponse[]> GetRooms(RoomFilter? filter)
     {
-        var rooms = await _roomRepository.GetRooms();
+        var rooms = await _roomRepository.GetRooms(filter);
         
         return rooms.Select(room => new SRoomResponse(room)).ToArray();
     }
